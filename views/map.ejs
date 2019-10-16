@@ -1,0 +1,18 @@
+<html>
+
+<head>
+    <title>FindMyAir</title>
+    <link rel="stylesheet" href="css/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <p>Try using query parameters on the URL. For ex: /map?lat=40.72&long=-73.9</p>
+
+    <div id="map" data-locations='<%- JSON.stringify(locations) %>'></div>
+</body>
+
+<script src="js/leaflet/leaflet.js"></script>
+<script src="js/map.js"></script>
+
+</html>
