@@ -7,3 +7,20 @@
     <li> Safety of the Airbnb's neighbourhood </li>
   </ul>
 </p>
+
+
+## Setup
+You will have to install Node v8+ (will auto-install npm v6+)
+
+```
+npm install
+```
+
+## Run
+### Debug run
+
+```
+DEBUG=findmyair:* npm start
+```
+
+### Production run (to be added)
