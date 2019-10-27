@@ -16,7 +16,11 @@ a {
 }
 
 .leaflet-marker-icon.selectedMarker{
-  background: red;
+ 	content:url("leaflet/images/red-marker.png") !important;
+}
+
+.leaflet-marker-icon{
+	content:url("leaflet/images/blue-marker.png") !important;
 }
 
 #map_holder{
