@@ -1,69 +1,34 @@
 const locations = JSON.parse(document.getElementById('map').getAttribute('data-locations'));
+const pois = JSON.parse(document.getElementById('map').getAttribute('data-pois'));
 
 const lat = locations.lat, long = locations.long;
 
 // initialize the map
-const map = L.map('map').setView([lat, long], 8);
+const map = L.map('map').setView([lat, long], 12);
 
 
 // load a tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 {
   // attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
-  maxZoom: 17,
-  minZoom: 1
+  maxZoom: 18,
+  minZoom: 10
 }).addTo(map);
 
 
-pointsOfInterest = [
-	{
-		id: 1,
-		name: "Point A",
-		latLong:[40.72, -73.9]
-	}, 
-	{
-		id: 2,
-		name: "Point B",
-		latLong:[41.72, -73.9]
-	}, 
-	{
-		id: 3,
-		name: "Point C",
-		latLong:[40.72, -74.9]
-	},
-	{
-		id: 4,
-		name: "Point D",
-		latLong:[41.72, -74.9]
-	},
-	{
-		id: 5,
-		name: "Point E",
-		latLong:[41.92, -74.5]
-	},
-	{
-		id: 6,
-		name: "Point F",
-		latLong:[40.9, -74.9]
-	}, 
-	{
-		id: 7,
-		name: "Point G",
-		latLong:[39.9, -74.9]
-	}, 
-	{
-		id: 8,
-		name: "Point H",
-		latLong:[39.9, -73.9]
-	}, 
-];
+pointsOfInterest = pois.map((poi, id) => {
+    poi.id = id;
+    poi.latLong = [Number(poi.latitude), Number(poi.longitude)];
+
+    return poi;
+});
 
 $(document).ready(setupPieChart);
 pointsOfInterest.forEach(function(point){
 	var marker = L.marker(point.latLong).addTo(map);
 	marker.bindPopup("<div class='poi_popup itemNotInItineary' id='point_holder_"+point.id+"'>\
 					<p>Name: " + point.name +"</p>\
-					<img src='img/points_of_interest/" + point.id + ".jpg'>\
+					<img src=" + point.image_url + ">\
 					</div>").openPopup();
 
 	marker.on('mouseover', function(e){
