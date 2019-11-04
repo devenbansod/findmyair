@@ -1,0 +1,16 @@
+{
+  "addons": [
+
+  ],
+  "buildpacks": [
+
+  ],
+  "env": {
+  },
+  "formation": {
+  },
+  "name": "findmyair",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
