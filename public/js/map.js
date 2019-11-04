@@ -16,8 +16,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 }).addTo(map);
 
 
-pointsOfInterest = pois.map((poi) => {
-    poi.latLong = [poi.latitude, poi.longitude];
+pointsOfInterest = pois.map((poi, id) => {
+    poi.id = id;
+    poi.latLong = [Number(poi.latitude), Number(poi.longitude)];
+
     return poi;
 });
 
