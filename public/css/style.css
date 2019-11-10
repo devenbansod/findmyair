@@ -23,14 +23,34 @@ a {
 	content:url("leaflet/images/blue-marker.png") !important;
 }
 
-#map_holder{
-	width: 65%;
-	float: left;
+#numberdays{
+	display: block;
+	/*float: left;*/
 }
 
-#itineary{
-	width: 30%;
-	float: right;
+#day-selector{
+    display: block;
+    /*float: right;*/
+        margin-top: 10px;
+
+}
+
+#day-selector label{
+    background-color: #d39e00;
+    border-color: white;
+}
+
+#day-selector label.active{
+background-color: #28a745!important
+}
+
+.dropdown-menu{
+    z-index: 9999999 !important;
+}
+
+#dropdownMenuButton{
+    margin: 0 10px;
+    margin-top: 10px;
 }
 
 #piechart-controls {
@@ -75,4 +95,25 @@ td, th {
     border: 1px solid grey;
     border-radius: 5px;
     margin: 1px;
+}
+
+#options{
+    margin-bottom: 2%;
+}
+
+.poi_popup p{
+    font-weight: 700;
+}
+
+.poi_popup{
+    width: 120px;
+    height: auto;
+}
+
+.itineary-day{
+    font-weight: 700
+}
+
+.itineary-day ul{
+    font-weight: 300
 }

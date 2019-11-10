@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title><%= title %></title>
-  <link rel='stylesheet' href='/css/style.css' />
+	 <% include partials/header %> 
 </head>
 
-<body>
-  <h1><%= title %></h1>
-  <p>Welcome to <%= title %></p>
+<body class="">
+	<% include partials/nav %> 
 
-  <a href="/map">Go to Map</a>
+  <header class="bg-primary text-white jumbotron">
+    <div class="text-center">
+      <h1><h1>FindMyAir</h1>
+ 	  <p class="lead">Welcome to FindMyAir</p></h1>
+    </div>
+  </header>
+
+ 
+
+  <% include partials/footer %> 
 </body>
 
 </html>
