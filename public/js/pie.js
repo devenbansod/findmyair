@@ -2,7 +2,7 @@ $(document).ready(setupPieChart);
 
 
 function setupPieChart() {
-		var abbrDimensions = ['S', 'T', 'A'];
+		var abbrDimensions = ['S', 'T', 'C'];
         var fullDimensions = ['Safety', 'Travel Cost', 'Airbnb Cost'];
 		var randomProportions = [0.34,0.33,0.33];
         var proportions = abbrDimensions.map(function(d,i) { return {
