@@ -2,9 +2,10 @@ $(document).ready(setupPieChart);
 
 
 function setupPieChart() {
-		var dimensions = ['Safety', 'Travel Cost', 'Airbnb Cost'];
+		var abbrDimensions = ['S', 'T', 'A'];
+        var fullDimensions = ['Safety', 'Travel Cost', 'Airbnb Cost'];
 		var randomProportions = [0.34,0.33,0.33];
-        var proportions = dimensions.map(function(d,i) { return {
+        var proportions = abbrDimensions.map(function(d,i) { return {
             label: d,
             proportion: randomProportions[i],
             collapsed: false,
@@ -16,7 +17,7 @@ function setupPieChart() {
 
         var setup = {
             canvas: document.getElementById('piechart'),
-            radius: 0.9,
+            radius: 0.7,
             collapsing: true,
             proportions: proportions,
             drawSegment: drawSegmentOutlineOnly,
@@ -44,12 +45,11 @@ function setupPieChart() {
 
             // Draw label on top
             context.save();
-            context.translate(centerX, centerY);
-            context.rotate(startingAngle);
+            context.translate(centerX+4, centerY+5);
 
-            var fontSize = Math.floor(context.canvas.height / 25);
-            var dx = radius - fontSize;
-            var dy = centerY / 10;
+            var fontSize = Math.floor(context.canvas.height / 15);
+            var dx = Math.cos(startingAngle) * (radius - fontSize + 25);
+            var dy = Math.sin(startingAngle) * (radius - fontSize + 25);
 
             context.textAlign = "right";
             context.font = fontSize + "pt Helvetica";
@@ -65,11 +65,11 @@ function setupPieChart() {
             var labelsRow = '<tr>';
             var propsRow = '<tr>';
             for(var i = 0; i < proportions.length; i += 1) {
-                labelsRow += '<th>' + proportions[i].format.label + '</th>';
+                labelsRow += '<th>' + fullDimensions[i] + " (" + abbrDimensions[i] + ")" + '</th>';
 
                 var v = '<var>' + percentages[i].toFixed(0) + '%</var>';
-                var plus = '<div id="plu-' + dimensions[i] + '" class="adjust-button" data-i="' + i + '" data-d="-1">&#43;</div>';
-                var minus = '<div id="min-' + dimensions[i] + '" class="adjust-button" data-i="' + i + '" data-d="1">&#8722;</div>';
+                var plus = '<div id="plu-' + abbrDimensions[i] + '" class="adjust-button" data-i="' + i + '" data-d="-1">&#43;</div>';
+                var minus = '<div id="min-' + abbrDimensions[i] + '" class="adjust-button" data-i="' + i + '" data-d="1">&#8722;</div>';
                 propsRow += '<td>' + v + plus + minus + '</td>';
             }
             labelsRow += '</tr>';

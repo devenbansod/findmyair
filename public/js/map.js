@@ -63,6 +63,7 @@ $('.dropdown-item').click(function() {
 	var numberOfDays = parseInt($(this).text());
 	$('#day-selector').html("");
 	$('#itineary').html("Your Itineary:<br><br>");
+	$('.selectedMarker').removeClass('selectedMarker')
   	for (i = 1; i <= numberOfDays; i++) {
     	$('<label class="btn btn-secondary '+ (i==1 ? "active": "")+'">\
    		<input type="radio" name="options" id="radio-day-'+i+'" value="'+i+'"autocomplete="off" '+(i==1 ? "checked": "")+'> Day '+i+'\
