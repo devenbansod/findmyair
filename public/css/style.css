@@ -121,3 +121,8 @@ td, th {
 #proportions-table{
     text-align: center
 }
+
+#submit_pref{
+    margin: 0 auto;
+    margin-top: 10px;
+}

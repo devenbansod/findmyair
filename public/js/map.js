@@ -73,6 +73,46 @@ $('.dropdown-item').click(function() {
 	}
 });
 
+
+
+$('#submit_pref').click(function() {
+	var pois = {}
+
+	var number_of_days = $(".itineary-day").length;
+	var safety = $("#proportions-table tr var")[0].innerHTML
+	var travel = $("#proportions-table tr var")[1].innerHTML
+	var airbnbcost = $("#proportions-table tr var")[2].innerHTML
+
+	var itineary_day = $(".itineary-day");
+
+	for (var i = 1; i <= number_of_days; i++) {
+		pois[i] = []
+ 		list_elements = $("#itineary-day-"+i + " li");
+ 		list_elements.each(function(iter, item){
+ 			pois[i].push(parseInt($(item).attr("id").split("_")[2]));
+ 		})
+	}
+
+    data = {
+    	"number_of_days":  number_of_days,
+    	"safety_cost": parseInt(safety.substring(0, safety.length - 1)),
+    	"travel_cost": parseInt(travel.substring(0, travel.length - 1)), 
+    	"airbnb_cost": parseInt(airbnbcost.substring(0, airbnbcost.length - 1)),
+    	"pois": pois
+    }
+
+    console.log(data) //testing
+    $.ajax({ 
+        data: data, 
+        type: "POST", 
+        url: "", //needs to be replaced
+        success: function(response) { 
+           console.log("Got response");
+        }
+    });
+    return false; 
+});
+
 // If you want to use D3 instead of native leaflet
 // var cities = [];
 // var d3OverLay = L.d3SvgOverlay(function(sel,proj){
