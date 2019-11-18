@@ -32,7 +32,7 @@
  
     </div>
 
-    <div class="row" style="height:100%;">
+    <div class="row" style="height:95%;">
         <div id="map_holder" class="col-md-8" style="max-height: 100%;">
             <div id="map" data-locations='<%- JSON.stringify(locations) %>' data-pois='<%- JSON.stringify(pois) %>'>
             </div>
@@ -49,16 +49,21 @@
                 <br>
             <hr>
             </div>
-            <div id="itineary">
+            <div id="itineary" style="overflow-y:auto; height: 300px">
+            </div>
+            <div id="suggested_airbnbs" style="overflow-y:auto; height: 300px">
             </div>
         </div>
     </div>
 
+    <div class="row">
+        <button class="btn btn-success" type="button" id="submit_pref">Submit</button>
+    </div>
 
     
     
 
-    
+    <% include partials/footer %> 
 
 
 </body>
@@ -70,5 +75,4 @@
 <script src="js/map.js"></script>
 <script src="js/pie.js"></script>
 <script src="js/draggable-piechart.js"></script>
-
 </html>

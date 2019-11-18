@@ -15,12 +15,27 @@ a {
 	width: 100%;
 }
 
-.leaflet-marker-icon.selectedMarker{
+.poi_icon.selectedMarker{
  	content:url("leaflet/images/red-marker.png") !important;
 }
 
-.leaflet-marker-icon{
+.poi_icon{
 	content:url("leaflet/images/blue-marker.png") !important;
+}
+
+
+.bnb_icon{
+    content:url("leaflet/images/bnb-blue.png") !important;
+    width: auto !important;
+}
+
+.bnb_icon.selectedBnb{
+    content:url("leaflet/images/bnb-red.png") !important;
+    width: auto !important;
+}
+
+.selectedBnbPara{
+    background: red;
 }
 
 #numberdays{
@@ -120,4 +135,9 @@ td, th {
 
 #proportions-table{
     text-align: center
+}
+
+#submit_pref{
+    margin: 0 auto;
+    margin-top: 10px;
 }
