@@ -1,6 +1,6 @@
 const request = require('request-promise-native');
 
-const BACKEND_URL = 'https://' + (process.env.BACKEND_URL || 'findmyair-api.herokuapp.com');
+const BACKEND_URL = 'http://' + (process.env.BACKEND_URL || 'findmyair-api.herokuapp.com');
 
 module.exports = {
 	getPOIs: async function getPOIs() {
@@ -19,5 +19,6 @@ module.exports = {
         } catch (err) {
             throw err;
         }
-    }
+    }, 
+    "BACKEND_URL": BACKEND_URL, 
 }

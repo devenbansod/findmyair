@@ -25,7 +25,7 @@ router.get('/map', async function (req, res, next) {
 router.post('/map', function (req, res, next) {
     data = req.body;
     console.log("query", data)
-    request.post('https://findmyair-api.herokuapp.com/suggested-airbnbs?order_by=total_score', {
+    request.post(poisModel["BACKEND_URL"]+'/suggested-airbnbs?order_by=total_score', {
         json: data
     }, (error, result, body) => {
         if (error) {

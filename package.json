@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "BACKEND_URL=127.0.0.1:8000 node ./bin/www"
   },
   "engines": {
     "node": "8.x"
