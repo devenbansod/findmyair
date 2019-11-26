@@ -147,9 +147,9 @@ function plotSuggestions(obj){
 					<a href='"+ suggestion.url +"' target='_blank'>Link to book</a>\
 					<p>Total Score: "+suggestion.suitability_score+"</p>\
 					<p>Cost Score: "+suggestion.cost_score+"</p>\
-					<p>Safety Score: "+suggestion.cost_score+"</p>\
-					<p>Travel Score: "+suggestion.cost_score+"</p>\
-					</div>")
+					<p>Safety Score: "+suggestion.safety_score+"</p>\
+					<p>Travel Score: "+suggestion.travel_score+"</p>\
+					</div>").openPopup();
 
 		marker.on('mouseover', function(e){
 			this.openPopup();
