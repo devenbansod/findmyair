@@ -23,7 +23,6 @@ pointsOfInterest = pois.map((poi, id) => {
     return poi;
 });
 
-
 pointsOfInterest.forEach(function(point){
 	var marker = L.marker(point.latLong).addTo(map);
 	marker.bindPopup("<div class='poi_popup itemNotInItineary' id='point_holder_"+point.id+"'>\
@@ -116,10 +115,10 @@ $('#submit_pref').click(function() {
     		'Content-Type': 'application/json'
   		},
         success: function(msg, status, jqXHR) { 
+           createFullItinerary(iternaries)
            plotSuggestions(JSON.parse(msg));
        }
     });
-
 
     return false; 
 });
@@ -150,17 +149,24 @@ function plotSuggestions(obj){
 					<p>Cost Score: "+suggestion.cost_score+"</p>\
 					<p>Safety Score: "+suggestion.cost_score+"</p>\
 					<p>Travel Score: "+suggestion.cost_score+"</p>\
-					</div>").openPopup();
+					</div>")
 
+		marker.on('mouseover', function(e){
+			this.openPopup();
+		});
+		marker.on('mouseout', function(e){
+			this.closePopup();
+		});
 		marker.on('click', function(e){
+			$(".selectedPath").remove();
 			if($(marker._icon).hasClass('selectedBnb')){
 				$(marker._icon).removeClass('selectedBnb');
 				selectBnB($(marker._icon).attr("id").split("_")[2], true)
-				this.closePopup();
 			} else {
 				$(marker._icon).addClass('selectedBnb');
-				this.openPopup();
+				handlePaths(Number($(marker._icon).attr("id").split("_")[2])-1, Number($('#day-selector input:radio:checked').val())-1)
 				selectBnB($(marker._icon).attr("id").split("_")[2], false)
+				
 				// alert("show paths now");
 			}
 		});
@@ -169,7 +175,6 @@ function plotSuggestions(obj){
 
 		rank += 1;
 	})
-	
 }
 
 function clickOnSuggestion(rank) {
@@ -183,9 +188,45 @@ function selectBnB(rank, already){
 	}
 	else {
 		$("#bnb_list_"+rank).addClass('selectedBnbPara');
-		$("#bnb_list_"+rank).get(0).scrollIntoView();
+		//$("#bnb_list_"+rank).get(0).scrollIntoView();
 	}
 	
+}
+fullItinerary = []
+function createFullItinerary(iternaries){
+	for(i=0;i<iternaries.length;i++){
+		var day = iternaries[i];
+		dayWiseItinerary = []
+		for(j=0;j<day.length;j++){
+			dayWiseItinerary.push([pointsOfInterest[iternaries[i][j]]["latitude"], pointsOfInterest[iternaries[i][j]]["longitude"]])
+		}
+		fullItinerary.push(dayWiseItinerary)
+	}
+	console.log(fullItinerary)
+}
+
+function handlePaths(selectedAirBnb,selectedDay){	
+	
+	dayWisePath = [[suggestions[selectedAirBnb]["latitude"], suggestions[selectedAirBnb]["longitude"]]]
+
+	for(i = 0;i<fullItinerary[selectedDay].length;i++){
+		dayWisePath.push([fullItinerary[selectedDay][i][0], fullItinerary[selectedDay][i][1]])
+	}
+	dayWisePath.push([suggestions[selectedAirBnb]["latitude"], suggestions[selectedAirBnb]["longitude"]])
+	var polyline = L.motion.polyline(dayWisePath, {
+						className: 'selectedPath',
+						color: "#000000"
+					}, {
+						auto: true,
+						easing: L.Motion.Ease.swing,
+						weight:2
+					},{
+						removeOnEnd: true,
+						
+						icon: L.divIcon({
+							className: 'pathMarker',
+							iconSize: L.point(20, 20)})
+					}).motionSpeed(10000).addTo(map);
 }
 
 
