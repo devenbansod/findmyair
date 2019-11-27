@@ -182,13 +182,12 @@ function plotSuggestions(obj){
 				selectBnB($(marker._icon).attr("id").split("_")[2], false)
 			}
 		});
-
-		marker.fire('click');
-
 		bnb_markers.push(marker)
 
 		rank += 1;
 	})
+
+	bnb_markers[bnb_markers.length - 1].fire('click')
 
 	showSuggestionsResult(suggestions);
 }

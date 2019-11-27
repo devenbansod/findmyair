@@ -256,3 +256,7 @@ td, th {
     content:url("leaflet/images/bnb-red.png") !important;
     width: auto !important;
 }
+.pathMarker{
+  background:#0C1347;
+  border-radius:50%;
+}
