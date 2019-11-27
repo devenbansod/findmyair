@@ -2,78 +2,106 @@
 
 <head>
     <title>FindMyAir</title>
-    <link rel="stylesheet" href="css/leaflet/leaflet.css" />
-    <link rel="stylesheet" href="css/style.css" />
-
     <% include partials/header %> 
 </head>
 
-<body class="jumbotron">
-    <% include partials/nav %> 
-    <!-- <p>Try using query parameters on the URL. For ex: /map?lat=40.72&long=-73.9</p> -->
-    
-    
-    <div class="row" id="options">
-        <div class="dropdown open " id="numberdays">
-            <button class="btn btn-secondary dropdown-toggle  bg-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Number of Days
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">1</a>
-                <a class="dropdown-item" href="#">2</a>
-                <a class="dropdown-item" href="#">3</a>
-                <a class="dropdown-item" href="#">4</a>
-                <a class="dropdown-item" href="#">5</a>
-                <a class="dropdown-item" href="#">6</a>
+<body>
+    <% include partials/nav %>
+    <div id="container">
+        <div id="sidebar" style="padding-right: 5%">
+            <div class="sidebar-wrapper">
+                <div class="navi">
+                    <ul class="nav nav-tabs">
+                      <li class="active input-tab-link"><a href="#" onclick="handleInputClick(event)">Input</a></li>
+                      <li class="search-tab-link"><a href="#" onclick="handleResultsClick(event)">Results</a></li>
+                    </ul>
+                </div>
+                <div class="panel panel-default" id="features">
+                    <div class="panel-body">
+                        <div class="row input-tab">
+                            <div class="col-xs-8 col-md-8 dropdown" id="numberdays" style="margin-bottom: 10px">
+                                <button class="btn btn-secondary dropdown-toggle bg-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Number of Days <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#">1</a></li>
+                                    <li><a class="dropdown-item" href="#">2</a></li>
+                                    <li><a class="dropdown-item" href="#">3</a></li>
+                                    <li><a class="dropdown-item" href="#">4</a></li>
+                                    <li><a class="dropdown-item" href="#">5</a></li>
+                                    <li><a class="dropdown-item" href="#">6</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row input-tab">
+                            <div class="col-xs-12 col-md-12 btn-group btn-group-toggle" data-toggle="buttons" id="day-selector"></div>
+                        </div>
+                        <div class="row input-tab">
+                            <div id="itinerary" class="col-xs-12 col-md-12" style="overflow-y:auto; max-height: 200px">
+                            </div>
+                        </div>
+                        <div class="row input-tab">
+                            <div id="piechart-controls" class="col-md-12 col-xs-12" style="margin-top: 10px">
+                                <span><b>Select Priorities:</b></span>
+                                <canvas id="piechart">Your browser is too old!</canvas>
+                                <table id="proportions-table"></table>
+                                <br/>
+                                <span>S: Safety, T: Travel Cost, C: Cost of Airbnb</span>
+                            </div>
+                        </div>
+                        <div class="row input-tab">
+                            <center>
+                                <button class="btn btn-success col-xs-10" style="width:90%; margin-top:5%;margin-left:5%;margin-right: 5%" type="button" id="submit_pref">Submit</button>
+                            </center>
+                        </div>
+                        <div class="row search-tab">
+                            <div id="suggested_airbnbs" class="col-md-12 col-xs-12">
+                                <table class="table table-hover table-bordered" id="feature-list">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>ID</th>
+                                            <th>Suitability Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="suggestion_table" class="list">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+<!--                         <div class="row search-tab">
+                            <div class="col-xs-8 col-md-8">
+                                <input type="text" class="form-control search" placeholder="Filter" />
+                            </div>
+                            <div class="col-xs-4 col-md-4 sor">
+                                <button type="button" class="btn btn-primary pull-right sort" data-sort="feature-name" id="sort-btn"><i class="fa fa-sort"></i>&nbsp;&nbsp;Sort</button>
+                            </div>
+                        </div> -->
+                    </div>
+                    <!-- div class="sidebar-table search-tab">
+                        
+                    </div> -->
+                </div>
             </div>
         </div>
-
-        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="day-selector"></div>
- 
+        <div id="map" data-locations='<%- JSON.stringify(locations) %>' data-pois='<%- JSON.stringify(pois) %>'></div>
     </div>
-
-    <div class="row" style="height:95%;">
-        <div id="map_holder" class="col-md-8" style="max-height: 100%;">
-            <div id="map" data-locations='<%- JSON.stringify(locations) %>' data-pois='<%- JSON.stringify(pois) %>'>
-            </div>
-        </div>
-
-
-        <div class="col-md-4">
-            Select Priorities:
-            <div id="piechart-controls">
-
-                <canvas id="piechart">Your browser is too old!</canvas>
-                <br>
-                <table id="proportions-table"></table>
-                <br>
-            <hr>
-            </div>
-            <div id="itineary" style="overflow-y:auto; height: 300px">
-            </div>
-            <div id="suggested_airbnbs" style="overflow-y:auto; height: 300px">
+    <div id="loading">
+        <div class="loading-indicator">
+            <div class="progress progress-striped active">
+                <div class="progress-bar progress-bar-info progress-bar-full"></div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <button class="btn btn-success" type="button" id="submit_pref">Submit</button>
-    </div>
-
-    
-    
-
-    <% include partials/footer %> 
-
+    <!-- /.modal -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/leaflet/leaflet.js"></script>
+    <script src="js/leaflet.motion/leaflet.motion.min.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/draggable-piechart.js"></script>
+    <script src="js/pie.js"></script>
 
 </body>
-
-
-<script src="js/leaflet/leaflet.js"></script>
-<script src="js/leaflet.motion/leaflet.motion.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.12.0/d3.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/leaflet-d3-svg-overlay@2.2.0/L.D3SvgOverlay.min.js"></script>
-<script src="js/map.js"></script>
-<script src="js/pie.js"></script>
-<script src="js/draggable-piechart.js"></script>
 </html>

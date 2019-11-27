@@ -3,13 +3,8 @@ var router = express.Router();
 const poisModel = require('../models/pois');
 var request = require('request');
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-    res.render('index', { title: 'Express' });
-});
 
-/* GET Map page */
-router.get('/map', async function (req, res, next) {
+async function renderMap(req, res, next) {
     const lat = req.query.lat || 40.75362,
         long = req.query.long || -73.98377;
     res.render('map', {
@@ -19,7 +14,13 @@ router.get('/map', async function (req, res, next) {
         },
         pois: (await poisModel.getPOIs()).map((poi) => poi.details)
     });
-});
+}
+
+/* GET home page. */
+router.get('/', renderMap);
+
+/* GET Map page */
+router.get('/map', renderMap);
 
 
 router.post('/map', function (req, res, next) {
