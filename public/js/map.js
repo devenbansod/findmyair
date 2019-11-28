@@ -4,8 +4,7 @@ const pois = JSON.parse(document.getElementById('map').getAttribute('data-pois')
 const lat = locations.lat, long = locations.long;
 
 // initialize the map
-const map = L.map('map').setView([lat, long], 12);
-
+const map = L.map('map', {closePopupOnClick: false}).setView([lat, long], 12);
 
 // load a tile layer
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
@@ -186,15 +185,11 @@ function plotSuggestions(obj){
 					<td>"+roundToTwoDecimal(suggestion.travel_score)+"</td></tr></tbody></table>\
 					</div>");
 
-
-
-		marker.on('mouseover', function(e){
-			this.openPopup();
-		});
-		marker.on('mouseout', function(e){
-			this.closePopup();
-		});
 		marker.on('click', function(e){
+			$('.leaflet-popup-close-button').on('click', function(e) {
+				$(marker._icon).removeClass('selectedBnb');
+				$(".selectedPath").remove();
+			});
 			$(".selectedPath").remove();
 
 			if($(marker._icon).hasClass('selectedBnb')) {
