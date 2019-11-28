@@ -3,6 +3,11 @@
 
 This README provides an overview of our project FindMyAir.
 
+FindMyAir suggests 'suitable' Airbnbs based on user's preferences like:
+   * Price of Airbnb
+   * Proximity of Airbnb to various places of interest (by commute time and cost)
+   * Safety of the Airbnb's neighbourhood
+
 The project has two primary components: 'FindMyAir UI' (folder named `findmyair`) and 'FindMyAir API' folder named `findmyair-api`).
 
 We describe them below in the order of their dependency.
