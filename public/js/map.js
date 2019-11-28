@@ -36,7 +36,7 @@ pointsOfInterest.forEach(function(point){
       riseOnHover: true
     }).addTo(map);
 	marker.bindPopup("<div class='poi_popup itemNotInitinerary' id='point_holder_"+point.id+"'>\
-					<p>"+ point.name +"</p>\
+					<p><b>"+ trimString(point.name, 20) +"</b></p>\
 					<img src=" + point.image_url + " width='100px' height='80px'>\
 					</div>");
 
@@ -136,6 +136,26 @@ $('#submit_pref').click(function() {
 });
 
 
+
+function roundToTwoDecimal(num){
+	if (num > 0)
+		return Math.round(num * 100) / 100
+	else
+		return 0
+}
+
+function trimString(string, length){
+	if(string){
+		if (string.length > length)
+			return string.substring(0, length) + "...";
+		else
+			return string
+	} else  {
+		return "PlaceHolder";
+	}
+
+}
+
 var bnb_markers = [];
 function plotSuggestions(obj){
 	suggestions = obj["suggestions"];
@@ -153,14 +173,20 @@ function plotSuggestions(obj){
 		$(marker._icon).addClass('bnb_icon')
 		$(marker._icon).attr("id", "bnb_icon_"+rank)
 
+
+		console.log(suggestion)
+
 		marker.bindPopup("<div class='bnb_popup' id='bnb_holder_"+rank+"'>\
-					Rank: "+rank+"\
-					<a href='"+ suggestion.url +"' target='_blank'>Link to book</a>\
-					<p>Total Score: "+suggestion.suitability_score+"</p>\
-					<p>Cost Score: "+suggestion.cost_score+"</p>\
-					<p>Safety Score: "+suggestion.safety_score+"</p>\
-					<p>Travel Score: "+suggestion.travel_score+"</p>\
+					<a href='"+ suggestion.url +"' target='_blank'>"+trimString(suggestion.name, 20)+"</a><br>\
+					<p style='margin: 5px 0'><b>Rank:</b> "+rank+"\
+					| <b>Score:</b> "+roundToTwoDecimal(suggestion.suitability_score)+"</p>\
+					<table class='table'><thead><tr style='border-top: 1px solid lightgray;'><th>C</th><th>S</th><th>T</th></tr></thead><tbody>\
+					<tr><td>"+roundToTwoDecimal(suggestion.cost_score)+"</td>\
+					<td>"+roundToTwoDecimal(suggestion.safety_score)+"</td>\
+					<td>"+roundToTwoDecimal(suggestion.travel_score)+"</td></tr></tbody></table>\
 					</div>");
+
+
 
 		marker.on('mouseover', function(e){
 			this.openPopup();
