@@ -8,13 +8,16 @@ const map = L.map('map').setView([lat, long], 12);
 
 
 // load a tile layer
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
 {
   // attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
   maxZoom: 18,
   minZoom: 10
 }).addTo(map);
 
+$(document).ready(function () {
+  $("#loading").hide();
+});
 
 pointsOfInterest = pois.map((poi, id) => {
     poi.id = id;
@@ -24,11 +27,18 @@ pointsOfInterest = pois.map((poi, id) => {
 });
 
 pointsOfInterest.forEach(function(point){
-	var marker = L.marker(point.latLong).addTo(map);
-	marker.bindPopup("<div class='poi_popup itemNotInItineary' id='point_holder_"+point.id+"'>\
+	var marker = L.marker(point.latLong, {
+      icon: L.icon({
+        iconUrl: "img/marker-icon.png",
+        iconSize: [20, 30],
+      }),
+      title: point.name,
+      riseOnHover: true
+    }).addTo(map);
+	marker.bindPopup("<div class='poi_popup itemNotInitinerary' id='point_holder_"+point.id+"'>\
 					<p>"+ point.name +"</p>\
-					<img src=" + point.image_url + ">\
-					</div>").openPopup();
+					<img src=" + point.image_url + " width='100px' height='80px'>\
+					</div>");
 
 	$(marker._icon).addClass('poi_icon')
 	marker.on('mouseover', function(e){
@@ -39,22 +49,21 @@ pointsOfInterest.forEach(function(point){
 	});
 
 
-	marker.on('click', function(e){
+	marker.on('click', function(e) {
 		var selectedDay = $('#day-selector input:radio:checked').val()
 	
-		if (selectedDay > 0){
-			var itineary = $("#itineary-day-"+selectedDay+" ul");
+		if (selectedDay > 0) {
+			var itinerary = $("#itinerary-day-"+selectedDay+" ul");
 			if($(marker._icon).hasClass('selectedMarker')){
 				$("#point_li_"+point.id).remove();
 				$(marker._icon).removeClass('selectedMarker');
 			} else {
-				itineary.append("<li id='point_li_"+point.id+"'>"+point.name+"</li>");
+				itinerary.append("<li id='point_li_"+point.id+"'>"+point.name+"</li>");
 				$(marker._icon).addClass('selectedMarker');
 			}
 		} else {
 			alert("Select number of days first");
 		}
-		
 	});
 })
 
@@ -62,14 +71,14 @@ pointsOfInterest.forEach(function(point){
 $('.dropdown-item').click(function() {
 	var numberOfDays = parseInt($(this).text());
 	$('#day-selector').html("");
-	$('#itineary').html("Your Itineary:<br><br>");
+	$('#itinerary').html("Your itinerary:<br><br>");
 	$('.selectedMarker').removeClass('selectedMarker')
   	for (i = 1; i <= numberOfDays; i++) {
     	$('<label class="btn btn-secondary '+ (i==1 ? "active": "")+'">\
    		<input type="radio" name="options" id="radio-day-'+i+'" value="'+i+'"autocomplete="off" '+(i==1 ? "checked": "")+'> Day '+i+'\
   		</label>').appendTo('#day-selector');
 
-  		$('<div id="itineary-day-'+i+'" class="itineary-day">Day '+i+'<ul></ul></div>').appendTo('#itineary');
+  		$('<div id="itinerary-day-'+i+'" class="itinerary-day">Day '+i+'<ul></ul></div>').appendTo('#itinerary');
 	}
 });
 
@@ -79,16 +88,16 @@ $('#submit_pref').click(function() {
 	var pois = {}
 	var iternaries = []
 
-	var number_of_days = $(".itineary-day").length;
+	var number_of_days = $(".itinerary-day").length;
 	var safety = $("#proportions-table tr var")[0].innerHTML
 	var travel = $("#proportions-table tr var")[1].innerHTML
 	var airbnbcost = $("#proportions-table tr var")[2].innerHTML
 
-	var itineary_day = $(".itineary-day");
+	var itinerary_day = $(".itinerary-day");
 
 	for (var i = 1; i <= number_of_days; i++) {
 		pois[i] = []
- 		list_elements = $("#itineary-day-"+i + " li");
+ 		list_elements = $("#itinerary-day-"+i + " li");
  		list_elements.each(function(iter, item){
  			pois[i].push(parseInt($(item).attr("id").split("_")[2]));
  		})
@@ -117,6 +126,9 @@ $('#submit_pref').click(function() {
         success: function(msg, status, jqXHR) { 
            createFullItinerary(iternaries)
            plotSuggestions(JSON.parse(msg));
+
+			$('.search-tab-link a').click();
+
        }
     });
 
@@ -127,21 +139,20 @@ $('#submit_pref').click(function() {
 var bnb_markers = [];
 function plotSuggestions(obj){
 	suggestions = obj["suggestions"];
-	console.log(suggestions);
 	var rank = 1;
 	suggestions.forEach(function(suggestion){
-		var marker = L.marker([suggestion["latitude"], suggestion["longitude"]]).addTo(map);
+
+		var marker = L.marker([suggestion["latitude"], suggestion["longitude"]], {
+	      icon: L.icon({
+	        iconUrl: "css/leaflet/images/bnb-blue.png",
+	        iconSize: [24, 28],
+	      }),
+	      title: suggestion['url'],
+	      riseOnHover: true
+	    }).addTo(map);
 		$(marker._icon).addClass('bnb_icon')
 		$(marker._icon).attr("id", "bnb_icon_"+rank)
-		$("#itineary").hide()
-		$("#suggested_airbnbs").append("<p class='suggestion_item' id='bnb_list_"+rank+"'>\
-			Rank: "+rank+"\
-			ID:"+suggestion.id+"\
-			Total Score: "+suggestion.suitability_score+"\
-			<a href='#' onclick=clickOnSuggestion("+rank+")>Select</a>\
-			</p>")
-		
-		
+
 		marker.bindPopup("<div class='bnb_popup' id='bnb_holder_"+rank+"'>\
 					Rank: "+rank+"\
 					<a href='"+ suggestion.url +"' target='_blank'>Link to book</a>\
@@ -149,7 +160,7 @@ function plotSuggestions(obj){
 					<p>Cost Score: "+suggestion.cost_score+"</p>\
 					<p>Safety Score: "+suggestion.safety_score+"</p>\
 					<p>Travel Score: "+suggestion.travel_score+"</p>\
-					</div>").openPopup();
+					</div>");
 
 		marker.on('mouseover', function(e){
 			this.openPopup();
@@ -159,22 +170,26 @@ function plotSuggestions(obj){
 		});
 		marker.on('click', function(e){
 			$(".selectedPath").remove();
-			if($(marker._icon).hasClass('selectedBnb')){
+
+			if($(marker._icon).hasClass('selectedBnb')) {
 				$(marker._icon).removeClass('selectedBnb');
 				selectBnB($(marker._icon).attr("id").split("_")[2], true)
 			} else {
+				$('.selectedBnb').removeClass('selectedBnb');
 				$(marker._icon).addClass('selectedBnb');
-				handlePaths(Number($(marker._icon).attr("id").split("_")[2])-1, Number($('#day-selector input:radio:checked').val())-1)
+				handlePaths(Number($(marker._icon).attr("id").split("_")[2])-1, Number($('#day-selector input:radio:checked').val())-1);
+
 				selectBnB($(marker._icon).attr("id").split("_")[2], false)
-				
-				// alert("show paths now");
 			}
 		});
-
 		bnb_markers.push(marker)
 
 		rank += 1;
 	})
+
+	bnb_markers[bnb_markers.length - 1].fire('click')
+
+	showSuggestionsResult(suggestions);
 }
 
 function clickOnSuggestion(rank) {
@@ -192,7 +207,7 @@ function selectBnB(rank, already){
 	}
 	
 }
-fullItinerary = []
+var fullItinerary = []
 function createFullItinerary(iternaries){
 	for(i=0;i<iternaries.length;i++){
 		var day = iternaries[i];
@@ -229,19 +244,57 @@ function handlePaths(selectedAirBnb,selectedDay){
 					}).motionSpeed(10000).addTo(map);
 }
 
+function handleInputClick(e) {
+  e.preventDefault();
+  var target = e.target;
+  var parent = $(target).parent();
+  if (parent.hasClass('active')) {
+    return;
+  }
 
-// If you want to use D3 instead of native leaflet
-// var cities = [];
-// var d3OverLay = L.d3SvgOverlay(function(sel,proj){
-//  var pointsOfInterestUpd = sel.selectAll('circle').data(pointsOfInterest);
-//  pointsOfInterestUpd.enter()
-//      .append('circle')
-//      .attr('r',function(d){return 100;})
-//      .attr('cx',function(d){return proj.latLngToLayerPoint(d).x;})
-//      .attr('cy',function(d){return proj.latLngToLayerPoint(d).y;})
-//      .attr('stroke','black')
-//      .attr('stroke-width',1)
-//      .attr('fill', "red");
-// });
+  $('.active').removeClass('active');
+  parent.addClass('active');
+  var otherTab = $('.input-tab');
+  otherTab.show();
 
-// d3OverLay.addTo(map);
+  var thisTab = $('.search-tab');
+  thisTab.hide();
+
+  $('.input-tab-link').addClass('active');
+}
+
+function handleResultsClick(e) {
+  e.preventDefault();
+  var target = e.target;
+  var parent = $(target).parent();
+  if (parent.hasClass('active')) {
+    return;
+  }
+
+  $('.active').removeClass('active');
+  parent.addClass('active');
+  var otherTab = $('.search-tab');
+  otherTab.show();
+
+  var thisTab = $('.input-tab');
+  thisTab.hide();
+
+  $('.search-tab-link').addClass('active');
+}
+
+function showSuggestionsResult(suggestions) {
+	var table = $('#suggestion_table');
+	var rank = 1;
+	suggestions.forEach((suggestion) => {
+		table.append("<tr class='suggestion_item' id='bnb_list_"+rank+"'>\
+			<td>"+rank+"</td>\
+			<td><a href='#' onclick=clickOnSuggestion("+rank+")>"+suggestion.id+"</a></td>\
+		 	<td>"+suggestion.suitability_score.toFixed(3) +"</td>\
+			</tr>");
+
+		rank += 1;
+	});
+}
+
+$('.input-tab').show();
+$('.search-tab').hide();
