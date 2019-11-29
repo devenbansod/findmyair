@@ -164,6 +164,7 @@ function plotSuggestions(obj){
     bnb_markers.forEach((marker) => {
         map.removeLayer(marker);
     });
+    bnb_markers = [];
     $(".selectedPath").remove();
     $(".selectedBnb").removeClass('selectedBnb');
 
