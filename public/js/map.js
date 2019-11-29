@@ -159,6 +159,14 @@ var bnb_markers = [];
 function plotSuggestions(obj){
 	suggestions = obj["suggestions"];
 	var rank = 1;
+
+    // remove any previous markers, selected Bnbs or paths
+    bnb_markers.forEach((marker) => {
+        map.removeLayer(marker);
+    });
+    $(".selectedPath").remove();
+    $(".selectedBnb").removeClass('selectedBnb');
+
 	suggestions.forEach(function(suggestion){
 
 		var marker = L.marker([suggestion["latitude"], suggestion["longitude"]], {
@@ -179,10 +187,10 @@ function plotSuggestions(obj){
 					<a href='"+ suggestion.url +"' target='_blank'>"+trimString(suggestion.name, 20)+"</a><br>\
 					<p style='margin: 5px 0'><b>Rank:</b> "+rank+"\
 					| <b>Score:</b> "+roundToTwoDecimal(suggestion.suitability_score)+"</p>\
-					<table class='table'><thead><tr style='border-top: 1px solid lightgray;'><th>C</th><th>S</th><th>T</th></tr></thead><tbody>\
-					<tr><td>"+roundToTwoDecimal(suggestion.cost_score)+"</td>\
-					<td>"+roundToTwoDecimal(suggestion.safety_score)+"</td>\
-					<td>"+roundToTwoDecimal(suggestion.travel_score)+"</td></tr></tbody></table>\
+					<table class='table'><thead><tr style='border-top: 1px solid lightgray;'><th>S</th><th>T</th><th>C</th></tr></thead><tbody>\
+					<tr><td>"+roundToTwoDecimal(suggestion.safety_score)+"</td>\
+					<td>"+roundToTwoDecimal(suggestion.travel_score)+"</td>\
+					<td>"+roundToTwoDecimal(suggestion.cost_score)+"</td></tr></tbody></table>\
 					</div>");
 
 		marker.on('click', function(e){
@@ -305,6 +313,8 @@ function handleResultsClick(e) {
 
 function showSuggestionsResult(suggestions) {
 	var table = $('#suggestion_table');
+    table.html('');
+
 	var rank = 1;
 	suggestions.forEach((suggestion) => {
 		table.append("<tr class='suggestion_item' id='bnb_list_"+rank+"'>\
