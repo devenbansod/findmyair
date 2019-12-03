@@ -146,3 +146,7 @@ td, th {
   background:#0C1347;
   border-radius:50%;
 }
+
+.bg-danger{
+    background-color: red !important
+}
