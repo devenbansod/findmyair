@@ -318,10 +318,17 @@ function showSuggestionsResult(suggestions) {
 
 	var rank = 1;
 	suggestions.forEach((suggestion) => {
+		var posReview = Math.ceil(Math.random() * 100);
+		var negReview = 100 - posReview;
 		table.append("<tr class='suggestion_item' id='bnb_list_"+rank+"'>\
-			<td>"+rank+"</td>\
-			<td><a href='#' onclick=clickOnSuggestion("+rank+")>"+suggestion.id+"</a></td>\
-		 	<td>"+suggestion.suitability_score.toFixed(3) +"</td>\
+			<td style='width: 20%'><a href='#' onclick=clickOnSuggestion("+rank+")>"+rank+"</td>\
+			<td style='width: 80%'>\
+			<div class='progress'>\
+			  <div class='progress-bar bg-success' role='progressbar' style='width: "+posReview+"%; background-color: #00C853' aria-valuenow='"+posReview+"' aria-valuemin='0' aria-valuemax='100'></div>\
+			  <div class='progress-bar bg-danger' role='progressbar' style='width: "+negReview+"%; background-color: #f44336' aria-valuenow='"+negReview+"' aria-valuemin='0' aria-valuemax='100'></div>\
+			</div>\
+			</td>\
+		 	<td style='width: 20%'>"+suggestion.suitability_score.toFixed(3) +"</td>\
 			</tr>");
 
 		rank += 1;
