@@ -12,6 +12,23 @@ The project has two primary components: 'FindMyAir UI' (folder named `findmyair`
 
 We describe them below in the order of their dependency.
 
+# Datasets
+============
+We use the following publicly available datasets and provide the links to download them since the datasets are huge.
+1) Airbnb listings: We use the following NYC datasets:
+	<1> Listings: http://data.insideairbnb.com/united-states/ny/new-york-city/2019-09-12/data/listings.csv.gz
+	<2> Calendar: http://data.insideairbnb.com/united-states/ny/new-york-city/2019-09-12/data/calendar.csv.gz
+	<3> Review: http://data.insideairbnb.com/united-states/ny/new-york-city/2019-09-12/data/reviews.csv.gz
+
+2) NYC Taxi Data: We use the publicly available yellow taxi data about the trip fares from one neighbourhood to other. It is available here: https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2018-01.csv.
+
+3) Crime data is taken from NYPD's website which lists all registered complaints along with seriousness of the crime. It is available here: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-Year-To-Date-/5uac-w243
+
+We also do the following pre-processing of the datasets while loading them:
+1) We remove all Airbnb's that have listed price as 0$  price greater than 10,000$ since those are outliers.
+2) We also remove Airbnb's that lie outside the boundary of NYC.
+3) We remove all police complaints that do not have a latitude-longitude of the crime.
+
 ## FindMyAir API
 ================
 
