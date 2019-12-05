@@ -4,8 +4,7 @@ const pois = JSON.parse(document.getElementById('map').getAttribute('data-pois')
 const lat = locations.lat, long = locations.long;
 
 // initialize the map
-const map = L.map('map').setView([lat, long], 12);
-
+const map = L.map('map', {closePopupOnClick: false}).setView([lat, long], 12);
 
 // load a tile layer
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
@@ -180,6 +179,14 @@ function plotSuggestions(obj){
 	suggestions = obj["suggestions"];
 	var rank = 1;
 
+    // remove any previous markers, selected Bnbs or paths
+    bnb_markers.forEach((marker) => {
+        map.removeLayer(marker);
+    });
+    bnb_markers = [];
+    $(".selectedPath").remove();
+    $(".selectedBnb").removeClass('selectedBnb');
+
 	//plot each suggestion on map
 	suggestions.forEach(function(suggestion){
 		var marker = L.marker([suggestion["latitude"], suggestion["longitude"]], {
@@ -201,21 +208,18 @@ function plotSuggestions(obj){
 					<a href='"+ suggestion.url +"' target='_blank'>"+trimString(suggestion.name, 20)+"</a><br>\
 					<p style='margin: 5px 0'><b>Rank:</b> "+rank+"\
 					| <b>Score:</b> "+roundToTwoDecimal(suggestion.suitability_score)+"</p>\
-					<table class='table'><thead><tr style='border-top: 1px solid lightgray;'><th>C</th><th>S</th><th>T</th></tr></thead><tbody>\
-					<tr><td>"+roundToTwoDecimal(suggestion.cost_score)+"</td>\
-					<td>"+roundToTwoDecimal(suggestion.safety_score)+"</td>\
-					<td>"+roundToTwoDecimal(suggestion.travel_score)+"</td></tr></tbody></table>\
+					<table class='table'><thead><tr style='border-top: 1px solid lightgray;'><th>S</th><th>T</th><th>C</th></tr></thead><tbody>\
+					<tr><td>"+roundToTwoDecimal(suggestion.safety_score)+"</td>\
+					<td>"+roundToTwoDecimal(suggestion.travel_score)+"</td>\
+					<td>"+roundToTwoDecimal(suggestion.cost_score)+"</td></tr></tbody></table>\
 					</div>");
-
-		marker.on('mouseover', function(e){
-			this.openPopup();
-		});
-		marker.on('mouseout', function(e){
-			this.closePopup();
-		});
 
 		//handle colors of markers and also path suggestion
 		marker.on('click', function(e){
+			$('.leaflet-popup-close-button').on('click', function(e) {
+				$(marker._icon).removeClass('selectedBnb');
+				$(".selectedPath").remove();
+			});
 			$(".selectedPath").remove();
 
 			//remove selection if already selected
@@ -333,6 +337,8 @@ function handleResultsClick(e) {
 //show suggestion results as table in the left pane
 function showSuggestionsResult(suggestions) {
 	var table = $('#suggestion_table');
+    table.html('');
+
 	var rank = 1;
 	suggestions.forEach((suggestion) => {
 		var posReview = suggestion["average_sentiment"]*100;
