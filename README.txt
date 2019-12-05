@@ -35,9 +35,9 @@ Setup:
 -------------
 
 The server can be started (in development mode) using the following code
-    $ python -m Flask run
+    $ gunicorn app:app
 
-This will start the server to listen on http://localhost:5000
+This will start the server to listen on http://localhost:8000
 
 The APIs can be executed in a standalone manner using Postman. Otherwise, they would be hit by the UI application described below.
 
@@ -79,10 +79,13 @@ This should start the server at http://localhost:3000/
 
 By default, the UI is designed to talk to the FindMyAir backend API at https://findmyair-api.herokuapp.com. This can be overriden by:
 ```
+npm test
+```
+This will assume that FindMyAir API server is running on http://localhost:8000.
+For custom post, eg: 5000 use the following command
+```
 BACKEND_URL=localhost:5000 npm run start
 ```
-
-This will assume that FindMyAir API server is running on http://localhost:5000.
 
 #### Interact with the UI
 * Open a (modern) browser of choice
