@@ -1,5 +1,6 @@
 const request = require('request-promise-native');
 
+//if env variable not provided use the heroku-version
 const BACKEND_URL = 'http://' + (process.env.BACKEND_URL || 'findmyair-api.herokuapp.com');
 
 module.exports = {

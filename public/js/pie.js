@@ -1,9 +1,12 @@
 $(document).ready(setupPieChart);
 
 function setupPieChart() {
+    //metrics
 	var abbrDimensions = ['S', 'T', 'C'];
     var fullDimensions = ['S', 'T', 'C'];
 	var randomProportions = [0.34,0.33,0.33];
+
+    //handle the area in pi-chart
     var proportions = abbrDimensions.map(function(d,i) { return {
         label: d,
         proportion: randomProportions[i],
@@ -12,7 +15,6 @@ function setupPieChart() {
             label: d.charAt(0).toUpperCase() + d.slice(1) // capitalise first letter
         }
     }});
-
 
     var setup = {
         canvas: document.getElementById('piechart'),
@@ -25,8 +27,8 @@ function setupPieChart() {
 
     var newPie = new DraggablePiechart(setup);
 
+    //handle the drawing dynamically as the hands are moved
     function drawSegmentOutlineOnly(context, piechart, centerX, centerY, radius, startingAngle, arcSize, format, collapsed) {
-
         if (collapsed) { return; }
 
         // Draw segment
@@ -56,6 +58,7 @@ function setupPieChart() {
         context.restore();
     }
 
+    // change the values in the table and keep them synced
     function onPieChartChange(piechart) {
 
         var table = document.getElementById('proportions-table');
